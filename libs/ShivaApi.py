@@ -130,6 +130,7 @@ class Compute(HttpClient):
             return self.json_response(response)
         return self.error_response(response)
 
+
 class Iam(HttpClient):
     def __init__(self, url: str, token_id: str, token_secret: str):
         super().__init__(url=url, token_id=token_id, token_secret=token_secret)
@@ -153,26 +154,53 @@ class Iam(HttpClient):
             return self.json_response(response)
         return self.error_response(response)
 
+
 class Inventory(HttpClient):
     def __init__(self, url: str, token_id: str, token_secret: str):
         super().__init__(url=url, token_id=token_id, token_secret=token_secret)
-        self.base_url = "/api/compute"
+        self.base_url = "/api/inventory"
         self.auth()
 
-    def get_types(self):
-        """Find Inventory Types"""
-        print(self.base_url + "/v1/inventories/types")
-        response = self.get(self.base_url + "/v1/inventories/types")
+    def get_virtual_machines(self):
+        """Get all Virtual Machines"""
+        response = self.get(self.base_url + "/v1/virtual_machines")
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
 
-    def get_application_items(self, inventory_item_type: str):
-        """Find Inventory Applications Items"""
-        response = self.get(self.base_url + "/v1/inventories/types/%s/items" % inventory_item_type)
+    def find_virtual_machine(self, name: str):
+        """Find Virtual Machine"""
+        response = self.get(self.base_url + "/v1/virtual_machines")
+        if response.status_code == HTTPStatus.OK:
+            for vm in response.json().get('items'):
+                if vm.get('name') == name:
+                    return vm
+            return None
+        return self.error_response(response)
+
+    def get_applications(self):
+        """Get all inventoried application"""
+        response = self.get(self.base_url + "/v1/applications")
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
+
+    def create_application(self, application_name: str, application_version: str):
+        """Create application"""
+        data = {"typeId": "5c2d444e-f80c-42b2-b149-6d3017d4b426", "items":
+            [{"name": application_name, "version": application_version}]}
+        response = self.post(self.base_url + "/v1/inventories/items", data)
+        if response.status_code == HTTPStatus.CREATED:
+            return True
+        return self.error_response(response)
+
+    def update_item(self, data: {}):
+        """Update item"""
+        response = self.patch(self.base_url + "/v1/inventories/items", data)
+        if response.status_code == HTTPStatus.CREATED:
+            return True
+        return self.error_response(response)
+
 
 class Backup(HttpClient):
     def __init__(self, url: str, token_id: str, token_secret: str):
@@ -222,6 +250,7 @@ class Backup(HttpClient):
             return self.json_response(response)
         return self.error_response(response)
 
+
 class Tags(HttpClient):
     def __init__(self, url: str, token_id: str, token_secret: str):
         super().__init__(url=url, token_id=token_id, token_secret=token_secret)
@@ -234,4 +263,3 @@ class Tags(HttpClient):
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
-
