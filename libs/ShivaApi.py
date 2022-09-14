@@ -42,7 +42,7 @@ class Compute(HttpClient):
                               data={'id': virtual_machine_id, 'powerAction': 'on'})
 
         if response.status_code == HTTPStatus.OK:
-            return json.dumps({"status": "success"})
+            return {"status": "success"}
         return self.error_response(response)
 
     def power_off_vm(self, virtual_machine_id):
@@ -50,7 +50,21 @@ class Compute(HttpClient):
                               data={'id': virtual_machine_id, 'powerAction': 'off'})
 
         if response.status_code == HTTPStatus.OK:
-            return json.dumps({"status": "success"})
+            return {"status": "success"}
+        return self.error_response(response)
+
+    def create_vm_with_template(self, vcenter_version: str, content_libraries: str, contentLibraryItemId: str, hostClusterId: str,
+                                datastoreId: str, deployOptions: [], datacenterId: str, virtual_machine_name: str):
+
+        json_data = {"contentLibraryItemId": contentLibraryItemId, "name": virtual_machine_name,
+                     "hostClusterId": hostClusterId, "datastoreId": datastoreId, "deployOptions": deployOptions,
+                     "datacenterId": datacenterId}
+
+        response = self.post(self.base_url + f"/v1/vcenters/{vcenter_version}/content_libraries/{content_libraries}/items",
+                             data=json_data)
+
+        if response.status_code == HTTPStatus.CREATED:
+            return {"status": "success"}
         return self.error_response(response)
 
     def get_hosts(self):
