@@ -309,6 +309,13 @@ class Observability(HttpClient):
             return None
         return self.error_response(response)
     
+    def get_host_services(self, id_host: str):
+        """Get a list of services for a host """
+        response = self.get(self.base_url + "/v1/hosts/" + id_host + "/services")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+    
     #
     # def create_application(self, application_name: str, application_version: str):
     #     """Create application"""
