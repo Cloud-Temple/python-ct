@@ -277,3 +277,51 @@ class Tags(HttpClient):
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
+
+
+class Observability(HttpClient):
+    def __init__(self, url: str, token_id: str, token_secret: str):
+        super().__init__(url=url, token_id=token_id, token_secret=token_secret)
+        self.base_url = "/api/rtms"
+        self.auth()
+
+    def get_appliances(self):
+        """Get all Appliances"""
+        response = self.get(self.base_url + "/v1/appliances")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response).get('data')
+        return self.error_response(response)
+
+    def get_hosts(self, name: str = None):
+        """Get a list of hosts."""
+        response = self.get(self.base_url + "/v1/host")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+
+    #
+    # def find_virtual_machine(self, name: str):
+    #     """Find Virtual Machine"""
+    #     response = self.get(self.base_url + "/v1/virtual_machines")
+    #     if response.status_code == HTTPStatus.OK:
+    #         for vm in response.json().get('items'):
+    #             if vm.get('name') == name:
+    #                 return vm
+    #         return None
+    #     return self.error_response(response)
+    #
+    # def create_application(self, application_name: str, application_version: str):
+    #     """Create application"""
+    #     data = {"typeId": "5c2d444e-f80c-42b2-b149-6d3017d4b426", "items":
+    #         [{"name": application_name, "version": application_version}]}
+    #     response = self.post(self.base_url + "/v1/inventories/items", data)
+    #     if response.status_code == HTTPStatus.CREATED:
+    #         return True
+    #     return self.error_response(response)
+    #
+    # def update_item(self, data: {}):
+    #     """Update item"""
+    #     response = self.patch(self.base_url + "/v1/inventories/items", data)
+    #     if response.status_code == HTTPStatus.CREATED:
+    #         return True
+    #     return self.error_response(response)
