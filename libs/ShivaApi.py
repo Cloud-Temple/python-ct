@@ -294,21 +294,21 @@ class Observability(HttpClient):
 
     def get_hosts(self, name: str = None):
         """Get a list of hosts."""
-        response = self.get(self.base_url + "/v1/host")
+        response = self.get(self.base_url + "/v1/hosts")
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
 
-    #
-    # def find_virtual_machine(self, name: str):
-    #     """Find Virtual Machine"""
-    #     response = self.get(self.base_url + "/v1/virtual_machines")
-    #     if response.status_code == HTTPStatus.OK:
-    #         for vm in response.json().get('items'):
-    #             if vm.get('name') == name:
-    #                 return vm
-    #         return None
-    #     return self.error_response(response)
+    def find_host(self, name: str):
+        """Find Virtual Machine"""
+        response = self.get(self.base_url + "/v1/hosts?name=" + name)
+        if response.status_code == HTTPStatus.OK:
+            for host in response.json().get('data'):
+                if host.get('name') == name:
+                    return host
+            return None
+        return self.error_response(response)
+    
     #
     # def create_application(self, application_name: str, application_version: str):
     #     """Create application"""
