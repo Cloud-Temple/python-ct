@@ -336,6 +336,12 @@ class Observability(HttpClient):
             return True
         return self.error_response(response)
     
+    def create_time_period_stop(self, time_period: {}):
+        """Create a notification time period stop"""
+        response = self.post(self.base_url + "/v1/monitoring_services/notifications/time_period_stops", time_period)
+        if response.status_code == HTTPStatus.CREATED:
+            return True
+        return self.error_response(response)
     
     #
     # def create_application(self, application_name: str, application_version: str):
