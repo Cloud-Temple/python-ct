@@ -316,6 +316,27 @@ class Observability(HttpClient):
             return self.json_response(response)
         return self.error_response(response)
     
+    def disable_notifications_by_service(self, id_host: str, id_service: str):
+        """Disable service notifications"""
+        data = {"enable": False, "services":
+            [id_service]}
+        print(data)
+        response = self.post(self.base_url + "/v1/hosts/" + id_host + "/monitoring/notifications", data)
+        if response.status_code == HTTPStatus.CREATED:
+            return True
+        return self.error_response(response)
+        
+    def enable_notifications_by_service(self, id_host: str, id_service: str):
+        """Disable service notifications"""
+        data = {"enable": True, "services":
+            [id_service]}
+        print(data)
+        response = self.post(self.base_url + "/v1/hosts/" + id_host + "/monitoring/notifications", data)
+        if response.status_code == HTTPStatus.CREATED:
+            return True
+        return self.error_response(response)
+    
+    
     #
     # def create_application(self, application_name: str, application_version: str):
     #     """Create application"""
