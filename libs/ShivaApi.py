@@ -38,8 +38,8 @@ class Compute(HttpClient):
             return self.json_response(response)
         return self.error_response(response)
 
-    def toto(self):
-        """Find Disks for virtual machine"""
+    def get_esxi_datastores(self):
+        """Find Datastores for ESXi"""
         response = self.get(self.base_url + "/v1/esxis/datastores")
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
