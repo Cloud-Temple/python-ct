@@ -138,7 +138,7 @@ class HttpClient:
             req.url = self.url + req.url
             req.headers = self.headers
             req_prepare = req.prepare()
-            return Session().send(req_prepare)
+            return Session().send(req_prepare, timeout=10)
         except RequestException as err:
             if hasattr(self, 'logger'):
                 self.logger.error("request exception %s", err)

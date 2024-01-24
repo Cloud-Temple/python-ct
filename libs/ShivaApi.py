@@ -9,6 +9,7 @@ class Compute(HttpClient):
         self.base_url = "/api/compute"
         self.auth()
 
+
     def get_vms(self):
         """Find virtual machines"""
         response = self.get(self.base_url + "/v1/vcenters/virtual_machines")
@@ -33,6 +34,21 @@ class Compute(HttpClient):
     def get_vm_disk(self, vm_id: str):
         """Find Disks for virtual machine"""
         response = self.get(self.base_url + "/v1/vcenters/virtual_disks?virtualMachineId=" + vm_id)
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+
+    def toto(self):
+        """Find Disks for virtual machine"""
+        response = self.get(self.base_url + "/v1/esxis/datastores")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+
+
+    def get_vm_network_adapters(self, vm_id: str):
+        """Find network adapters for virtual machine"""
+        response = self.get(self.base_url + "/v1/vcenters/network_adapters?virtualMachineId=" + vm_id)
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
