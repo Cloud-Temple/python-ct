@@ -1,5 +1,6 @@
 from libs.ShivaApi import Compute
 
+
 # Init clients
 shiva_compute_client = Compute(url="https://shiva.cloud-temple.com",
                                token_id="<changeme>",
@@ -9,5 +10,8 @@ shiva_compute_client = Compute(url="https://shiva.cloud-temple.com",
 vms_list = shiva_compute_client.get_vms()
 
 for vm in vms_list:
-    print(vm)
-    print("A virtual machine %s is %s" % (vm['name'], vm['powerState']))
+    print(f"Virtual machine {vm.get('name')}")
+    print(f"Virtual machine details {vm}")
+    print()
+
+
