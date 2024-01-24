@@ -2,8 +2,8 @@ from libs.ShivaApi import Inventory
 
 # Init clients
 shiva_inventory_client = Inventory(url="https://shiva.cloud-temple.com",
-                                   token_id="5a20ca1c-028c-46e8-8bea-6a0a0a6b8c7e",
-                                   token_secret="d27f838d-78f4-4873-ac4c-c98b68a995f4")
+                                   token_id="",
+                                   token_secret="")
 
 # Show all Applications
 applications = shiva_inventory_client.get_applications()
