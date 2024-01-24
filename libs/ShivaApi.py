@@ -9,7 +9,6 @@ class Compute(HttpClient):
         self.base_url = "/api/compute"
         self.auth()
 
-
     def get_vms(self):
         """Find virtual machines"""
         response = self.get(self.base_url + "/v1/vcenters/virtual_machines")
@@ -358,20 +357,3 @@ class Observability(HttpClient):
         if response.status_code == HTTPStatus.CREATED:
             return True
         return self.error_response(response)
-    
-    #
-    # def create_application(self, application_name: str, application_version: str):
-    #     """Create application"""
-    #     data = {"typeId": "5c2d444e-f80c-42b2-b149-6d3017d4b426", "items":
-    #         [{"name": application_name, "version": application_version}]}
-    #     response = self.post(self.base_url + "/v1/inventories/items", data)
-    #     if response.status_code == HTTPStatus.CREATED:
-    #         return True
-    #     return self.error_response(response)
-    #
-    # def update_item(self, data: {}):
-    #     """Update item"""
-    #     response = self.patch(self.base_url + "/v1/inventories/items", data)
-    #     if response.status_code == HTTPStatus.CREATED:
-    #         return True
-    #     return self.error_response(response)
