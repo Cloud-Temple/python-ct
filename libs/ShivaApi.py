@@ -178,6 +178,13 @@ class Compute(HttpClient):
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
+    
+    def get_openiaas_storage_repositories(self):
+        """Find all storage_repositories"""
+        response = self.get(self.base_url + "/v1/open_iaas/storage_repositories")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
 
     def get_vcenters(self):
         """Find vCenter servers"""
