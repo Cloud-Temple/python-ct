@@ -67,11 +67,7 @@ class HttpClient:
             exp_epoch = datetime.fromtimestamp(self.jwt_decoded['exp'])
             time_now = datetime.now()
             diff = (exp_epoch - time_now).total_seconds() / 60
-            if 10 > diff > 1:
-                if hasattr(self, 'logger'):
-                    self.logger.debug("10 > diff > 1 - token is valide")
-                self.__refresh()
-            elif diff < 1:
+            if diff < 10:
                 self.__login()
 
     def __login(self):
@@ -94,32 +90,6 @@ class HttpClient:
             else:
                 self.jwt_decoded = jwt.decode(bearer_request.text, options={"verify_signature": False})
                 self.bearer_token = bearer_request.text
-
-        except RequestException as err:
-            if hasattr(self, 'logger'):
-                self.logger.error("request exception %s", err)
-            raise HttpClientException("request exception", err) from err
-
-    def __refresh(self):
-        try:
-            headers = {
-                'Content-Type': 'application/json',
-                'accept': 'application/json',
-                'Authorization': "Bearer " + self.bearer_token
-            }
-
-            refreshToken = {
-                'refreshToken': self.bearer_token
-            }
-
-            # Retrieve bearer
-            bearer_request = requests.post(url=self.url + "/api/iam/v2/auth/refresh", headers=headers,
-                                           json=refreshToken)
-
-            if bearer_request.status_code != 200:
-                raise HttpClientException("Cannot generate bearer token", bearer_request.reason)
-            else:
-                self.bearer_token = bearer_request.json()['refresh_token']
 
         except RequestException as err:
             if hasattr(self, 'logger'):
