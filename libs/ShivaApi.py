@@ -43,7 +43,41 @@ class Compute(HttpClient):
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
+    
+    def get_all_contentlibs(self):
+        """Find all content libraries"""
+        response = self.get(self.base_url + "/v1/vcenters/content_libraries")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
 
+    def get_all_contentlibsitems(self):
+        """Find all content libraries items"""
+        response = self.get(self.base_url + "/v1/vcenters/content_libraries/items")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+    
+    def get_openiaas_templates(self):
+        """Find all openiaas templates"""
+        response = self.get(self.base_url + "/v1/open_iaas/templates")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+    
+    def get_all_vcnetworks(self):
+        """Find all vc networks"""
+        response = self.get(self.base_url + "/v1/vcenters/networks")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+    
+    def get_openiaas_networks(self):
+        """Find all vc networks"""
+        response = self.get(self.base_url + "/v1/open_iaas/networks")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
 
     def get_vm_network_adapters(self, vm_id: str):
         """Find network adapters for virtual machine"""
@@ -85,6 +119,13 @@ class Compute(HttpClient):
     def get_hosts(self):
         """Find Hots"""
         response = self.get(self.base_url + "/v1/vcenters/hosts")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+
+    def get_openiaas_hosts(self):
+        """Find Hosts"""
+        response = self.get(self.base_url + "/v1/open_iaas/hosts")
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
@@ -134,6 +175,13 @@ class Compute(HttpClient):
     def get_datastore_clusters_by_dc(self, id_dc):
         """Find Datastore Clusters"""
         response = self.get(self.base_url + "/v1/vcenters/datastore_clusters?virtualDatacenterId="+id_dc)
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+    
+    def get_openiaas_storage_repositories(self):
+        """Find all storage_repositories"""
+        response = self.get(self.base_url + "/v1/open_iaas/storage_repositories")
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
@@ -253,7 +301,7 @@ class Backup(HttpClient):
 
     def get_policies(self):
         """Find SLA Policies"""
-        response = self.get(self.base_url + "/v1/policies")
+        response = self.get(self.base_url + "/v1/spp/policies")
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
