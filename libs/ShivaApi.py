@@ -301,7 +301,7 @@ class Backup(HttpClient):
 
     def get_policies(self):
         """Find SLA Policies"""
-        response = self.get(self.base_url + "/v1/policies")
+        response = self.get(self.base_url + "/v1/spp/policies")
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
