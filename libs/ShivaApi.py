@@ -342,6 +342,44 @@ class Tags(HttpClient):
         return self.error_response(response)
 
 
+class Order(HttpClient):
+    def __init__(self, url: str, token_id: str, token_secret: str):
+        super().__init__(url=url, token_id=token_id, token_secret=token_secret)
+        self.base_url = "/api/order"
+        self.auth()
+
+    def get_consumptions(self, start_date: str, end_date: str):
+        """Get consumptions for a time period
+        
+        Args:
+            start_date: Start date in format YYYY-MM-DD (e.g., "2025-01-15")
+            end_date: End date in format YYYY-MM-DD (e.g., "2025-01-17")
+        
+        Returns:
+            List of consumption items with usage and SKU information
+        """
+        from datetime import datetime
+        
+        # Convert date strings to timestamp in milliseconds
+        try:
+            start_timestamp = int(datetime.strptime(start_date, "%Y-%m-%d").timestamp() * 1000)
+            end_timestamp = int(datetime.strptime(end_date, "%Y-%m-%d").timestamp() * 1000)
+        except ValueError as e:
+            raise ValueError(f"Invalid date format. Expected YYYY-MM-DD: {e}")
+        
+        # Validate that end_date >= start_date
+        if end_timestamp < start_timestamp:
+            raise ValueError("end_date must be greater than or equal to start_date")
+        
+        response = self.get(
+            self.base_url + f"/v1/consumptions?exportTimeStart={start_timestamp}&exportTimeEnd={end_timestamp}"
+        )
+        
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+
+
 class Observability(HttpClient):
     def __init__(self, url: str, token_id: str, token_secret: str):
         super().__init__(url=url, token_id=token_id, token_secret=token_secret)
