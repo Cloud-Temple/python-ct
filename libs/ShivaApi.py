@@ -43,7 +43,41 @@ class Compute(HttpClient):
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
+    
+    def get_all_contentlibs(self):
+        """Find all content libraries"""
+        response = self.get(self.base_url + "/v1/vcenters/content_libraries")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
 
+    def get_all_contentlibsitems(self):
+        """Find all content libraries items"""
+        response = self.get(self.base_url + "/v1/vcenters/content_libraries/items")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+    
+    def get_openiaas_templates(self):
+        """Find all openiaas templates"""
+        response = self.get(self.base_url + "/v1/open_iaas/templates")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+    
+    def get_all_vcnetworks(self):
+        """Find all vc networks"""
+        response = self.get(self.base_url + "/v1/vcenters/networks")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+    
+    def get_openiaas_networks(self):
+        """Find all vc networks"""
+        response = self.get(self.base_url + "/v1/open_iaas/networks")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
 
     def get_vm_network_adapters(self, vm_id: str):
         """Find network adapters for virtual machine"""
@@ -85,6 +119,13 @@ class Compute(HttpClient):
     def get_hosts(self):
         """Find Hots"""
         response = self.get(self.base_url + "/v1/vcenters/hosts")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+
+    def get_openiaas_hosts(self):
+        """Find Hosts"""
+        response = self.get(self.base_url + "/v1/open_iaas/hosts")
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
@@ -134,6 +175,13 @@ class Compute(HttpClient):
     def get_datastore_clusters_by_dc(self, id_dc):
         """Find Datastore Clusters"""
         response = self.get(self.base_url + "/v1/vcenters/datastore_clusters?virtualDatacenterId="+id_dc)
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+    
+    def get_openiaas_storage_repositories(self):
+        """Find all storage_repositories"""
+        response = self.get(self.base_url + "/v1/open_iaas/storage_repositories")
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
@@ -253,7 +301,7 @@ class Backup(HttpClient):
 
     def get_policies(self):
         """Find SLA Policies"""
-        response = self.get(self.base_url + "/v1/policies")
+        response = self.get(self.base_url + "/v1/spp/policies")
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
@@ -289,6 +337,44 @@ class Tags(HttpClient):
     def get_tags(self):
         """Retrieve all tags"""
         response = self.get(self.base_url + "/v1/tags")
+        if response.status_code == HTTPStatus.OK:
+            return self.json_response(response)
+        return self.error_response(response)
+
+
+class Order(HttpClient):
+    def __init__(self, url: str, token_id: str, token_secret: str):
+        super().__init__(url=url, token_id=token_id, token_secret=token_secret)
+        self.base_url = "/api/order"
+        self.auth()
+
+    def get_consumptions(self, start_date: str, end_date: str):
+        """Get consumptions for a time period
+        
+        Args:
+            start_date: Start date in format YYYY-MM-DD (e.g., "2025-01-15")
+            end_date: End date in format YYYY-MM-DD (e.g., "2025-01-17")
+        
+        Returns:
+            List of consumption items with usage and SKU information
+        """
+        from datetime import datetime
+        
+        # Convert date strings to timestamp in milliseconds
+        try:
+            start_timestamp = int(datetime.strptime(start_date, "%Y-%m-%d").timestamp() * 1000)
+            end_timestamp = int(datetime.strptime(end_date, "%Y-%m-%d").timestamp() * 1000)
+        except ValueError as e:
+            raise ValueError(f"Invalid date format. Expected YYYY-MM-DD: {e}")
+        
+        # Validate that end_date >= start_date
+        if end_timestamp < start_timestamp:
+            raise ValueError("end_date must be greater than or equal to start_date")
+        
+        response = self.get(
+            self.base_url + f"/v1/consumptions?exportTimeStart={start_timestamp}&exportTimeEnd={end_timestamp}"
+        )
+        
         if response.status_code == HTTPStatus.OK:
             return self.json_response(response)
         return self.error_response(response)
